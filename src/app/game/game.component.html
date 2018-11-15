@@ -1,0 +1,17 @@
+<div class="container">
+  <h1>Connect Four</h1>
+  <div *ngIf="!gameOver">
+    <h2>Current Player: {{currentPlayer.name}}</h2>
+  </div>
+  <div *ngIf="gameOver">
+    <h2>Winner is {{winner.name}}</h2>
+    <button id="restartButton" (click)="restartGame()"><b>Play Again</b></button>
+  </div>
+  <br>
+  <br>
+  <div class="flex-container" *ngFor="let row of board;let i=index">
+    <div *ngFor="let value of row;let j=index">
+      <div class="flex-item" (click)="makeMove(i,j)" [ngStyle]="{'background-color':getBackgroundColor(i,j)}"></div>
+    </div>
+  </div>
+</div>
