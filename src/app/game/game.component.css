@@ -1,5 +1,15 @@
-.container{
+.game{
   text-align: center;
+  height: 100vh;
+  background-image: url("https://static.vecteezy.com/system/resources/previews/000/101/237/large_2x/free-abstract-background-11-vector.jpg");
+}
+#boardGame{
+  margin:0 auto;
+  width:600px;
+  background-color: sandybrown;
+  background-image:linear-gradient(to bottom right,sandybrown, saddlebrown);
+  border-radius: 25px;
+  padding: 20px;
 }
 .flex-container{
   display: flex;
@@ -11,24 +21,60 @@
   text-align: center;
   width:70px;
   height:70px;
-  color:red;
   margin:5px;
-  border-radius: 50%
+  border-radius: 50%;
 }
-h1{
-  font-family: Aharoni;
-  color:red;
+
+.gameDetails1{
+  margin-top: 20px;
 }
-h2{
-  margin:30px;
-  display:inline;
-  color:steelblue;
-  font-family: Arial;
+.gameDetails2{
+  margin-top: 20px;
+  color: crimson;
 }
-#restartButton{
-  margin: 0 auto;
+.endButton{
+  margin:10px;
+  display: inline;
   padding:10px;
   width:200px;
-  height:40px;
-  background-color: red;
+  height:50px;
+  animation: winner 3s linear infinite;
 }
+@keyframes winner {
+  0%   {background-color: red;}
+  50%  {background-color: firebrick;}
+  100%   {background-color: darkred;}
+}
+#titleImage{
+  max-width: 500px;
+  max-height: 500px;
+}
+@media all and (max-width: 900px) {
+  .flex-item{
+    width:50px;
+    height:50px
+  }
+  #boardGame{
+    width:450px;
+  }
+}
+@media all and (max-width: 500px) {
+.flex-item{
+  width:30px;
+  height:30px
+}
+  #boardGame{
+    width:300px;
+  }
+  #titleImage
+  {
+    max-width: 200px;
+    max-height: 200px;
+  }
+  .endButton{
+    width:150px;
+    height:50px;
+    font-size: small;
+  }
+}
+

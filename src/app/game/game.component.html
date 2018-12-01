@@ -1,17 +1,34 @@
-<div class="container">
-  <h1>Connect Four</h1>
+<div class="game">
+  <br><br>
+  <img id="titleImage" src='../assets/img/title.png'>
   <div *ngIf="!gameOver">
-    <h2>Current Player: {{currentPlayer.name}}</h2>
+    <div class="container">
+    <div class="row">
+      <div class="col-6 gameDetails1 ">
+        <h3>Current Player:</h3>
+        <h3 [ngStyle]="{'color':getPlayerColor()}"><strong>{{currentPlayer.name}}</strong> </h3>
+      </div>
+      <div class="col-6 gameDetails2">
+        <h5>{{player1.name}} Wins: {{humanWins}}</h5>
+        <hr style="background-color: black">
+        <h5>{{player2.name}} Wins: {{computerWins}}</h5>
+      </div>
+    </div>
+  </div>
   </div>
   <div *ngIf="gameOver">
-    <h2>Winner is {{winner.name}}</h2>
-    <button id="restartButton" (click)="restartGame()"><b>Play Again</b></button>
+    <h3 *ngIf="!draw" class="gameDetails1">Winner is {{winner.name}}</h3>
+    <h3 *ngIf="draw" class="gameDetails1">It's a Draw! no winner here...</h3>
+    <button class="endButton" (click)="restartGame()"><b>Play Again</b></button>
+    <button class="endButton" (click)="goBackToLobby()"><b>Go back to lobby</b></button>
   </div>
   <br>
   <br>
+  <div id="boardGame">
   <div class="flex-container" *ngFor="let row of board;let i=index">
     <div *ngFor="let value of row;let j=index">
-      <div class="flex-item" (click)="makeMove(i,j)" [ngStyle]="{'background-color':getBackgroundColor(i,j)}"></div>
+      <div class="flex-item" (click)="cellClicked(i,j)" [ngStyle]="{'background-color':getBackgroundColor(i,j)}"></div>
     </div>
+  </div>
   </div>
 </div>

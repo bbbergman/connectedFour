@@ -1,220 +1,143 @@
-import { Component, OnInit } from '@angular/core';
-import {Player} from "../player.model";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Color, Player} from "../player.model";
+import {Logic} from "../logic";
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css']
 })
-export class GameComponent implements OnInit {
-  board: string[][];
-  player1 = new Player('Or', 'B');
-  player2 = new Player('Computer', 'R');
+
+export class GameManagerComponent implements OnInit {
+  board: Color[][];
+  player1 ;
+  player2 ;
+  currentPlayer;
   winner: Player;
-  currentPlayer: Player = this.player1;
   columnFreeSpace: number[] = [5, 5, 5, 5, 5, 5, 5];
   gameOver = false;
+  draw = false;
+  private logic: Logic;
+  coinAudio; winAudio;
+  @Input() player1name;
+  @Input() player2name;
+  @Output() backToLobby = new EventEmitter();
+  movesCounter = 0;
+  totalMoves = 42;
+  humanWins = 0;
+  computerWins = 0;
 
-  constructor() {
+
+  constructor(logic: Logic) {
+    this.logic = logic;
   }
   ngOnInit() {
+    this.initPlayers()
     this.initBoard();
+    this.initAudio();
   }
-
+  initPlayers() {
+    this.player1 = new Player(this.player1name, Color.BLUE);
+    this.player2 = new Player(this.player2name, Color.RED);
+    this.currentPlayer =  this.player1;
+  }
   initBoard() {
     this.board = [];
     for (let i = 0; i < 6; i++) {
       const columns = [];
       for (let j = 0; j < 7; j++) {
-        columns.push('0');
+        columns.push(Color.BLACK);
       }
       this.board.push(columns);
     }
   }
-
-  makeMove(i, j) {
-    if (this.currentPlayer === this.player1) {
+  initAudio() {
+    this.coinAudio = new Audio('../../../assets/audio/silver-coin.wav');
+    this.winAudio = new Audio('\'../../../assets/audio/win-sound.wav');
+  }
+  playAudio() {
+    if (!this.gameOver) {
+      this.coinAudio.play();
+    } else {
+      this.winAudio.play();
+    }
+  }
+  cellClicked(i, j) {
+    if (this.currentPlayer === this.player1 && !(this.gameOver)) {
       if (this.columnFreeSpace[j] === i) {
-        this.board[i][j] = this.currentPlayer.value;
-        this.columnFreeSpace[j] = i - 1;
-        if (!this.checkIf4InARow()) {
-          this.changePlayer();
-          this.makeComputerMove();
-        } else {
-          this.winner = this.player1;
-          this.changePlayer(); /// temp bug fix
-        }
+        this.makeMove(i , j);
+        this.checkIfGameOver(i, j);
       }
     }
   }
-  async makeComputerMove() {
-    await this.sleep(1000);
-    let randomCol = Math.floor(Math.random() * 7) + 0;
-    while (this.columnFreeSpace[randomCol] === -1) {
-      randomCol = Math.floor(Math.random() * 7) + 0;
-    }
-    this.board[this.columnFreeSpace[randomCol]][randomCol] = this.currentPlayer.value;
-    this.columnFreeSpace[randomCol] = this.columnFreeSpace[randomCol] - 1;
-    if (!this.checkIf4InARow()) {
-      this.changePlayer();
+  makeMove(row, col) {
+    this.playAudio();
+    this.board[row][col] = this.currentPlayer.color;
+    this.columnFreeSpace[col] = row - 1;
+    this.movesCounter++;
+  }
+  checkIfGameOver(row , col) {
+    if (!this.logic.checkIf4InARow(this.board, this.currentPlayer, row, col)) {
+      if (this.movesCounter < this.totalMoves) {
+        this.switchTurn();
+      } else {
+        this.drawGame();
+      }
     } else {
-      this.winner = this.player2;
+      this.endGame();
     }
+  }
+  changePlayer() {
+    this.currentPlayer === this.player1 ? this.currentPlayer = this.player2 : this.currentPlayer = this.player1;
+  }
+  switchTurn() {
+    this.changePlayer();
+    if (this.currentPlayer === this.player2) {
+      this.makeComputerSmartMove();
+    }
+  }
+  drawGame() {
+    this.draw = true;
+    this.gameOver = true;
+  }
+  endGame() {
+      this.gameOver = true;
+      this.playAudio();
+      this.winner = this.currentPlayer;
+      if (this.currentPlayer === this.player1) {
+        this.humanWins++;
+      } else {
+        this.computerWins++;
+      }
+    }
+  async makeComputerSmartMove() {
+    await this.sleep(1000);
+    const computerResponse = this.logic.computerLogic(this.board, this.player1, this.player2 , this.columnFreeSpace)
+    const compRow = this.columnFreeSpace[computerResponse];
+    const compCol = computerResponse;
+    this.makeMove(compRow, compCol);
+    this.checkIfGameOver(compRow, compCol);
   }
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
-  changePlayer() {
-    this.currentPlayer.value === 'B' ? this.currentPlayer = this.player2 : this.currentPlayer = this.player1;
-  }
 
   getBackgroundColor(i, j) {
     switch (this.board[i][j]) {
-      case '0':
+      case Color.BLACK:
         return 'black';
-      case 'B':
+      case Color.BLUE:
         return 'darkBlue';
-      case 'R':
+      case Color.RED:
         return 'red';
+      case Color.GOLD:
+        return 'darkGoldenRod';
     }
   }
-
-  checkIf4InARow(): boolean {
-    this.checkRow();
-    if (!this.gameOver) {
-      this.checkCol();
-    }
-    if (!this.gameOver) {
-      this.checkDiagonal();
-    }
-    if (!this.gameOver) {
-      this.checkDiagonal2();
-    }
-    if (this.gameOver) {
-      return true;
-    } else {
-      return false;
-    }
-
-  }
-
-  checkRow() {
-    let count;
-    for (let i = 0; i < 6; i++) {
-      count = 0;
-      for (let j = 0; j < 7; j++) {
-        if (this.board[i][j] === this.currentPlayer.value) {
-          count++;
-          if (count === 4) {
-            this.gameOver = true;
-            return;
-          }
-        } else {
-          count = 0;
-        }
-      }
-    }
-  }
-  checkCol() {
-    let count;
-    for (let j = 0; j < 7; j++) {
-      count = 0;
-      for (let i = 0; i < 6; i++) {
-        if (this.board[i][j] === this.currentPlayer.value) {
-          count++;
-          if (count === 4) {
-            this.gameOver = true;
-            return;
-          }
-        } else {
-          count = 0;
-        }
-      }
-    }
-  }
-
-  checkDiagonal() {
-    let i = 0;
-    while (i < 6) {
-      let count = 0;
-      let k;
-      if (i >= 0 && i <= 2) {
-        k = 6;
-        let line = i;
-        while (count < 4 && line < 6) {
-          if (this.board[line][k] === this.currentPlayer.value) {
-            count++;
-            if (count === 4) {
-              this.gameOver = true;
-              return;
-            }
-          } else {
-            count = 0;
-          }
-          line++;
-          k--;
-        }
-      } else {
-        k = 0;
-        let line = i;
-        while (count < 4 && line >= 0) {
-          if (this.board[line][k] === this.currentPlayer.value) {
-            count++;
-            if (count === 4) {
-              this.gameOver = true;
-              return;
-            }
-          } else {
-            count = 0;
-          }
-          line--;
-          k++;
-        }
-      }
-      i++;
-    }
-  }
-
-  checkDiagonal2() {
-    let i = 0;
-    while (i < 6) {
-      let count = 0;
-      let k;
-      if (i >= 0 && i <= 2) {
-        k = 0;
-        let line = i;
-        while (count < 4 && line < 6) {
-          if (this.board[line][k] === this.currentPlayer.value) {
-            count++;
-            if (count === 4) {
-              this.gameOver = true;
-              return;
-            }
-          } else {
-            count = 0;
-          }
-          line++;
-          k++;
-        }
-      } else {
-        k = 6;
-        let line = i;
-        while (count < 4 && line >= 0) {
-          if (this.board[line][k] === this.currentPlayer.value) {
-            count++;
-            if (count === 4) {
-              this.gameOver = true;
-              return;
-            }
-          } else {
-            count = 0;
-          }
-          line--;
-          k--;
-        }
-      }
-      i++;
-    }
+  getPlayerColor() {
+    let color;
+    this.currentPlayer.color === Color.BLUE ? color = 'blue' : color = 'red';
+    return color;
   }
 
   restartGame() {
@@ -222,6 +145,12 @@ export class GameComponent implements OnInit {
     this.currentPlayer = this.player1;
     this.columnFreeSpace = [5, 5, 5, 5, 5, 5, 5];
     this.gameOver = false;
+    this.draw = false;
+    this.movesCounter = 0;
+  }
+
+  goBackToLobby() {
+    this.backToLobby.emit();
   }
 }
 

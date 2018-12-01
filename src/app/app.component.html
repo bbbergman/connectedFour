@@ -1,1 +1,21 @@
-<app-game></app-game>
+<div class="lobby" *ngIf="!startGame">
+<div class="lobby">
+  <br><br>
+  <img id="titleImage" src='../assets/img/title.png'>
+  <h1 id=hello class="display-3" style="font-weight: bold"> Hello!</h1>
+  <h1 class="display-3">What's your name?</h1>
+  <br>
+  <div class="row">
+  <div class="form-group">
+  <label for="player">Player Name:</label>
+  <input class="form-control" [(ngModel)]="player1name" type="text" id="player">
+    <br>
+  <button class="btn btn-primary btn-lg " (click)="start()">Start Game!</button>
+  </div>
+  </div>
+</div>
+</div>
+  <div *ngIf="startGame">
+<app-game [player1name]="player1name" [player2name]="player2name" (backToLobby)="loadLobby($event)"></app-game>
+  </div>
+

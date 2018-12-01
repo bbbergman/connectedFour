@@ -1,9 +1,16 @@
+ export enum Color {
+  BLUE,
+  RED ,
+  BLACK ,
+  GOLD,
+}
+
 export class Player {
   name: string;
-  value: string;
+  color: Color;
 
-  constructor(name: string, value: string) {
+  constructor(name: string, color: Color) {
     this.name = name;
-    this.value = value;
+    this.color = color;
   }
 }
