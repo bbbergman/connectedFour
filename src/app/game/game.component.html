@@ -9,9 +9,10 @@
         <h3 [ngStyle]="{'color':getPlayerColor()}"><strong>{{currentPlayer.name}}</strong> </h3>
       </div>
       <div class="col-6 gameDetails2">
-        <h5>{{player1.name}} Wins: {{humanWins}}</h5>
+        <h5 id="player1Wins"><span class="fa fa-user"></span> {{player1.name}} Wins: {{player1.wins}}</h5>
         <hr style="background-color: black">
-        <h5>{{player2.name}} Wins: {{computerWins}}</h5>
+        <h5 *ngIf="vsComputer" class="player2Wins"><span class="fa fa-laptop"></span> {{player2.name}} Wins: {{player2.wins}}</h5>
+        <h5 *ngIf="!vsComputer" class="player2Wins"><span class="fa fa-user"></span> {{player2.name}} Wins: {{player2.wins}}</h5>
       </div>
     </div>
   </div>

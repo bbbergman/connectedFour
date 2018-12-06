@@ -1,21 +1,43 @@
 <div class="lobby" *ngIf="!startGame">
-<div class="lobby">
   <br><br>
   <img id="titleImage" src='../assets/img/title.png'>
   <h1 id=hello class="display-3" style="font-weight: bold"> Hello!</h1>
   <h1 class="display-3">What's your name?</h1>
   <br>
+  <form>
   <div class="row">
   <div class="form-group">
-  <label for="player">Player Name:</label>
-  <input class="form-control" [(ngModel)]="player1name" type="text" id="player">
+  <label for="player"><span class="fa fa-user"></span> Player 1 Name:</label>
+  <input class="form-control" name="player1name" [(ngModel)]="player1name" type="text" id="player">
+  </div>
+  </div>
     <br>
-  <button class="btn btn-primary btn-lg " (click)="start()">Start Game!</button>
+    <div class="row">
+    <div class="form-group">
+    <label><span class="fa fa-laptop"></span> Play VS Computer</label>
+    <input class="form-control" name="vsComputer" [(ngModel)]="vsComputer" (click)="checkboxClicked()" type="checkbox"/>
+    </div>
+    </div>
+    <br>
+      <div class="row">
+      <div class="form-group">
+      <label id="twoPlayersGame"><span class="fa fa-user"></span><span class="fa fa-user"></span> 2 Players Game</label>
+      </div>
+    </div>
+      <div class="row">
+        <div class="form-group">
+        <label id="player2Name" for="player2"><span class="fa fa-user"></span> Player 2 Name:</label>
+        <input required="true" [disabled]="vsComputer"  class="labelPlayer2 form-control" name="player2name" [(ngModel)]="player2name" type="text" id="player2">
+      </div>
+    </div>
+    <div class="row">
+    <div class="form-group">
+    <button class="btn btn-primary btn-lg " (click)="start()">Start Game!</button>
+    </div>
   </div>
+  </form>
   </div>
-</div>
-</div>
   <div *ngIf="startGame">
-<app-game [player1name]="player1name" [player2name]="player2name" (backToLobby)="loadLobby($event)"></app-game>
+<app-game [player1name]="player1name" [player2name]="player2name" [vsComputer]="vsComputer" (backToLobby)="loadLobby($event)"></app-game>
   </div>
 

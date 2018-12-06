@@ -1,8 +1,7 @@
-
 .lobby{
   text-align: center;
   height: 100vh;
-  background-image: url("https://static.vecteezy.com/system/resources/previews/000/101/237/large_2x/free-abstract-background-11-vector.jpg");
+  background-image: url('../assets/img/background1.jpg');
 }
 .form-group{
   margin: 0 auto;
@@ -10,22 +9,59 @@
 }
 .btn-primary{
   margin: 30px;
-  display: block;
 }
 label{
-  color: crimson;
   font-weight: bold;
-  font-size: larger;
+  color:darkblue;
+}
+#labelPlayer2{
+  color: red;
+}
+#twoPlayersGame{
+  color: grey;
+}
+#player2Name{
+color: grey;
 }
 #hello{
   margin-top: 30px;
-
 }
 #titleImage{
   max-width: 600px;
   max-height: 600px;
 }
 @media all and (max-width: 500px) {
+  .display-3 {
+    display: inline-block;
+    font-size: 1.5rem;
+  }
+  #hello{
+    margin-top: 10px;
+  }
+  #titleImage
+  {
+    max-width: 300px;
+    max-height: 300px;
+  }
+}
+@media screen
+and (min-device-width: 1200px)
+and (max-device-width: 1600px)
+and (-webkit-min-device-pixel-ratio: 1) {
+  .display-3 {
+    font-size: 2rem;
+  }
+  #titleImage
+  {
+    max-width: 300px;
+    max-height: 300px;
+  }
+}
+@media screen
+and (min-device-width: 1200px)
+and (max-device-width: 1600px)
+and (-webkit-min-device-pixel-ratio: 2)
+and (min-resolution: 192dpi) {
   .display-3 {
     font-size: 2rem;
   }

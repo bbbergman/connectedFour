@@ -377,7 +377,7 @@ export class Logic {
           if (board[line][k] === player.color) {
             count++;
             if (count === 3) {
-              if (i + 1 <= 5) {
+              if (line + 1 <= 5) {
                 if (columnFreeSpace[k + 1] === line + 1) {
                   if (board[line + 1 ][k + 1] === Color.BLACK) {
                     return k + 1;
@@ -405,7 +405,7 @@ export class Logic {
           if (board[line][k] === player.color) {
             count++;
             if (count === 3) {
-              if (i - 1 >= 0) {
+              if (line - 1 >= 0) {
                 if (columnFreeSpace[k - 1] === line - 1) {
                   if (board[line - 1 ][k - 1] === Color.BLACK) {
                     return k - 1;

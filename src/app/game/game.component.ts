@@ -21,12 +21,10 @@ export class GameManagerComponent implements OnInit {
   coinAudio; winAudio;
   @Input() player1name;
   @Input() player2name;
+  @Input() vsComputer;
   @Output() backToLobby = new EventEmitter();
   movesCounter = 0;
   totalMoves = 42;
-  humanWins = 0;
-  computerWins = 0;
-
 
   constructor(logic: Logic) {
     this.logic = logic;
@@ -37,8 +35,8 @@ export class GameManagerComponent implements OnInit {
     this.initAudio();
   }
   initPlayers() {
-    this.player1 = new Player(this.player1name, Color.BLUE);
-    this.player2 = new Player(this.player2name, Color.RED);
+    this.player1 = new Player(this.player1name, Color.BLUE , 0);
+    this.player2 = new Player(this.player2name, Color.RED , 0);
     this.currentPlayer =  this.player1;
   }
   initBoard() {
@@ -63,7 +61,7 @@ export class GameManagerComponent implements OnInit {
     }
   }
   cellClicked(i, j) {
-    if (this.currentPlayer === this.player1 && !(this.gameOver)) {
+    if ((this.vsComputer && this.currentPlayer === this.player1 && !(this.gameOver)) || (!this.vsComputer && !(this.gameOver))) {
       if (this.columnFreeSpace[j] === i) {
         this.makeMove(i , j);
         this.checkIfGameOver(i, j);
@@ -92,7 +90,7 @@ export class GameManagerComponent implements OnInit {
   }
   switchTurn() {
     this.changePlayer();
-    if (this.currentPlayer === this.player2) {
+    if (this.vsComputer === true && this.currentPlayer === this.player2) {
       this.makeComputerSmartMove();
     }
   }
@@ -105,9 +103,9 @@ export class GameManagerComponent implements OnInit {
       this.playAudio();
       this.winner = this.currentPlayer;
       if (this.currentPlayer === this.player1) {
-        this.humanWins++;
+        this.player1.wins++;
       } else {
-        this.computerWins++;
+        this.player2.wins++;
       }
     }
   async makeComputerSmartMove() {
@@ -136,7 +134,7 @@ export class GameManagerComponent implements OnInit {
   }
   getPlayerColor() {
     let color;
-    this.currentPlayer.color === Color.BLUE ? color = 'blue' : color = 'red';
+    this.currentPlayer.color === Color.BLUE ? color = 'darkBlue' : color = 'red';
     return color;
   }
 
