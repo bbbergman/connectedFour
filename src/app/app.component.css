@@ -23,20 +23,17 @@ label{
 #player2Name{
 color: grey;
 }
-#hello{
-  margin-top: 30px;
-}
 #titleImage{
   max-width: 600px;
   max-height: 600px;
 }
 @media all and (max-width: 500px) {
   .display-3 {
-    display: inline-block;
+    display: inline;
     font-size: 1.5rem;
   }
   #hello{
-    margin-top: 10px;
+    margin-right:10px;
   }
   #titleImage
   {
@@ -49,7 +46,11 @@ and (min-device-width: 1200px)
 and (max-device-width: 1600px)
 and (-webkit-min-device-pixel-ratio: 1) {
   .display-3 {
+    display: inline;
     font-size: 2rem;
+  }
+  #hello{
+    margin-right:10px;
   }
   #titleImage
   {
@@ -63,7 +64,11 @@ and (max-device-width: 1600px)
 and (-webkit-min-device-pixel-ratio: 2)
 and (min-resolution: 192dpi) {
   .display-3 {
+    display: inline;
     font-size: 2rem;
+  }
+  #hello{
+    margin-right:10px;
   }
   #titleImage
   {
