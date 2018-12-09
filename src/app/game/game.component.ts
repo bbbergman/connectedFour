@@ -110,7 +110,7 @@ export class GameManagerComponent implements OnInit {
     }
   async makeComputerSmartMove() {
     await this.sleep(1000);
-    const computerResponse = this.logic.computerLogic(this.board, this.player1, this.player2 , this.columnFreeSpace)
+    const computerResponse = this.logic.computerLogic(this.board, this.player1, this.player2 , this.columnFreeSpace, this.movesCounter);
     const compRow = this.columnFreeSpace[computerResponse];
     const compCol = computerResponse;
     this.makeMove(compRow, compCol);

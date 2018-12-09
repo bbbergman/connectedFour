@@ -172,24 +172,41 @@ export class Logic {
     }
     return false;
   }
-  computerLogic(board, human, comp, columnFreeSpace): number {
-    let value = this.computerAttack(board, comp, columnFreeSpace);
-    if (value === -1) {
-      value = this.computerDefence(board, human, columnFreeSpace);
-    }
-     if (value === -1) {
-       value = this.compCheck2Rows(board, comp, columnFreeSpace);
-    }
-    if (value === -1) {
-      value = this.getRandomInt(0, 6);
-      while (columnFreeSpace[value] === -1) {
+  computerLogic(board, human, comp, columnFreeSpace , movesCounter): number {
+    let value;
+    if (movesCounter === 1) {
+      value = this.makeComputerFirstMove(board, human);
+    } else {
+        value = this.computerAttack(board, comp, columnFreeSpace);
+      if (value === -1) {
+        value = this.computerDefence(board, human, columnFreeSpace);
+      }
+      if (value === -1) {
+        value = this.compCheck2Rows(board, comp, columnFreeSpace);
+      }
+      if (value === -1) {
         value = this.getRandomInt(0, 6);
+        while (columnFreeSpace[value] === -1) {
+          value = this.getRandomInt(0, 6);
+        }
       }
     }
     return value;
   }
   getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+  makeComputerFirstMove(board, human) {
+    const lastRow = 5;
+    for (let j = 0; j < 7; j++) {
+      if (board[lastRow][j] === human.color) {
+        if (j >= 3) {
+          return j - 1;
+        } else {
+          return j + 1;
+        }
+      }
+    }
   }
   computerAttack(board, comp, columnFreeSpace): number {
     let value = this.compCheck3Rows(board, comp, columnFreeSpace);

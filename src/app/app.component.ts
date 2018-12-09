@@ -34,7 +34,7 @@ export class AppComponent  implements OnInit {
   checkboxClicked() {
       document.getElementById('twoPlayersGame').style.color = this.vsComputer ?  'darkBlue' : 'grey';
       document.getElementById('player2Name').style.color = this.vsComputer ?  'red' : 'grey';
-      this.vsComputer === true ? this.player2name =  'player2' : this.player2name =  'COMPUTER';
+      this.vsComputer === true ? this.player2name =  'Player2' : this.player2name =  'COMPUTER';
   }
 }
 
